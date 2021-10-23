@@ -73,7 +73,12 @@ export default function ShortChart(props) {
             if (debtRatio>(parseFloat(parseInt(inputData.liquidation)/100))){
                 farm_profit = (inputData.valueSupplied * .1) - inputData.valueSupplied
             }
-            newDataSet.push({deltapct: i, profit: Math.round((profit + Number.EPSILON) * 100) / 100,farm_profit: Math.round((farm_profit + Number.EPSILON) * 100) / 100 })
+            newDataSet.push({deltapct: i,
+                profit: 0,
+                farm_profit: Math.round((farm_profit + Number.EPSILON) * 100) / 100,
+                debt: Math.round((debt + Number.EPSILON) * 100) / 100,
+                positVal: Math.round((posit + Number.EPSILON) * 100) / 100
+            })
             if (i === 100) {
                 setData(newDataSet)
             }
@@ -131,8 +136,11 @@ export default function ShortChart(props) {
                             Profit (Equity - Initial Deposit)
                         </Label>
                     </YAxis>
+                    <Line data={data} type="monotone" name={'Baseline'} dataKey="profit" stroke={"black"} dot={false}/>
 
-                    <Line data={data} type="monotone" name={'Profit'} dataKey="farm_profit" stroke={theme.palette.primary.main} dot={false}/>
+                    <Line data={data} type="monotone" name={'Profit'} dataKey="farm_profit" stroke={"Green"} dot={false}/>
+                    <Line data={data} type="monotone" name={'Debt'} dataKey="debt" stroke={"red"} dot={false}/>
+                    <Line data={data} type="monotone" name={'Position Value'} dataKey="positVal" stroke={theme.palette.primary.dark} dot={false}/>
                     <Tooltip/>
                 </LineChart>
             </ResponsiveContainer>

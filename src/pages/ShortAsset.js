@@ -7,7 +7,18 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import Chart from "../modules/Chart";
-import {Container, Grid, InputAdornment, Paper, Slider, TextField, Tooltip, tooltipClasses} from "@mui/material";
+import {
+    Card,
+    CardContent,
+    Container,
+    Grid,
+    InputAdornment,
+    Paper,
+    Slider,
+    TextField,
+    Tooltip,
+    tooltipClasses
+} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {useState} from "react";
 import styled from "@emotion/styled";
@@ -95,10 +106,10 @@ function ShortAsset() {
                             <Slider
                                 id={'slider'}
                                 aria-label="Always visible"
-                                defaultValue={1}
+                                defaultValue={2}
                                 step={0.1}
                                 marks
-                                min={1} max={3}
+                                min={2} max={3}
                                 valueLabelDisplay="on"
                                 onChange={handleLeverageChange}
                             />
@@ -196,7 +207,7 @@ function ShortAsset() {
                             </Paper>
                         </Grid>
                         <Grid item xs={12}>
-                            <Paper sx={{p: 2, display: 'flex', flexDirection: 'column'}}>
+                            <Paper sx={{p: 2, display: 'flex', flexDirection: 'column'}} elevation={2}>
                                 <Typography> Length of HODL in days </Typography>
 
                                 <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto" min={1}
@@ -204,9 +215,17 @@ function ShortAsset() {
                             </Paper>
                         </Grid>
                         <Grid item xs={12}>
-                            <Paper sx={{p: 2, display: 'flex', flexDirection: 'column'}}>
-
-                            </Paper>
+                                <Paper sx={{ minWidth: 275,p: 2, display: 'flex', flexDirection: 'column' }} elevation={2}>
+                                        <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
+                                            Shorting an asset through leveraged yield farms
+                                        </Typography>
+                                    <Typography variant="body2">
+                                        By supplying a stable coin and borrowing an asset, you can effectively short it to an extent.
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        When the borrowed asset drops in price, the amount of debt to be repaid also drops. This allows for a bearish position to be taken while also receiving yield rewards.
+                                    </Typography>
+                                </Paper>
                         </Grid>
                     </Grid>
 
