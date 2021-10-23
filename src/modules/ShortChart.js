@@ -29,9 +29,9 @@ function getPositionValue(assetprice,multi, LPValue, apr, time ){
     return step1 + step5
 }
 
-function getDebtValue(assetprice, multi, borrowapr, time ){
+function getDebtValue(assetprice, multi, borrowapr, time, deltapct ){
     const leverage = multi - 1
-    const borrowValue = leverage * assetprice
+    const borrowValue = leverage * assetprice * (1+parseFloat(deltapct/100))
     const step3 = ((borrowapr/100) * (parseInt(time)/365))
 
     const exp = Math.pow(E,step3 )
@@ -43,23 +43,7 @@ function getChange(price, delta) {
 }
 
 
-const HtmlTooltip= styled(({className, ...props}) => (
-    <Tooltip {...props} classes={{popper: className}}/>
-))(({theme}) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: '#f5f5f9',
-        color: 'rgba(0, 0, 0, 0.87)',
-        maxWidth: 220,
-        fontSize: theme.typography.pxToRem(12),
-        border: '1px solid #dadde9',
-    },
-}));
-
-HtmlTooltip.propTypes = {
-    title: PropTypes.element,
-    children: PropTypes.node
-};
-export default function Chart(props) {
+export default function ShortChart(props) {
     const theme = useTheme();
     // assetprice:0,multi:1,borrowapr:0,apy:0, time:1
     const [data, setData] = useState({});
@@ -67,7 +51,7 @@ export default function Chart(props) {
 
     React.useEffect(() => {
         const inputData = {
-            assetprice: props.data.assetprice,
+            valueSupplied: props.data.assetprice,
             multi: props.data.multi,
             borrowapr: props.data.borrowapr,
             apr: props.data.apy,
@@ -78,16 +62,16 @@ export default function Chart(props) {
 
         const newDataSet = []
         for (let i = -100; i < 101; i++) {
-            const newPrice = getChange(inputData.assetprice, i)
-            const profit = parseFloat(newPrice-inputData.assetprice)
+            const newPrice = getChange(inputData.valueSupplied, i)
             const lpval = getLPValue(i)
-            const posit = getPositionValue(inputData.assetprice,inputData.multi, lpval, inputData.apr, inputData.time )
-            const debt = getDebtValue(inputData.assetprice, inputData.multi,inputData.borrowapr,inputData.time)
+            const posit = getPositionValue(inputData.valueSupplied,inputData.multi, lpval, inputData.apr, inputData.time )
+            const debt = getDebtValue(inputData.valueSupplied, inputData.multi,inputData.borrowapr,inputData.time, i)
             const debtRatio = debt / posit
             const equity = posit - debt
-            let farm_profit = equity - inputData.assetprice
+            const profit = parseFloat(equity-inputData.valueSupplied)
+            let farm_profit = equity - inputData.valueSupplied
             if (debtRatio>(parseFloat(parseInt(inputData.liquidation)/100))){
-                farm_profit = (inputData.assetprice * .1) - inputData.assetprice
+                farm_profit = (inputData.valueSupplied * .1) - inputData.valueSupplied
             }
             newDataSet.push({deltapct: i, profit: Math.round((profit + Number.EPSILON) * 100) / 100,farm_profit: Math.round((farm_profit + Number.EPSILON) * 100) / 100 })
             if (i === 100) {
@@ -105,7 +89,7 @@ export default function Chart(props) {
         <React.Fragment>
 
             <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                Farm vs HODL Calculator
+                Leveraged Short
             </Typography>
             <ResponsiveContainer>
                 <LineChart
@@ -126,7 +110,7 @@ export default function Chart(props) {
                         type="number"
                         >
                         <Label
-                            value="% Change in Supplied Asset Value"
+                            value="% Change in Borrowed Asset Value"
                             position="top"
                             offset={15} >      </Label>
                     </XAxis>
@@ -148,8 +132,7 @@ export default function Chart(props) {
                         </Label>
                     </YAxis>
 
-                    <Line data={data} type="monotone" name={'HODL PROFIT'} dataKey="profit" stroke={theme.palette.secondary.main} dot={false}/>
-                    <Line data={data} type="monotone" name={'FARM PROFIT'} dataKey="farm_profit" stroke={theme.palette.primary.main} dot={false}/>
+                    <Line data={data} type="monotone" name={'Profit'} dataKey="farm_profit" stroke={theme.palette.primary.main} dot={false}/>
                     <Tooltip/>
                 </LineChart>
             </ResponsiveContainer>
