@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useTheme} from '@mui/material/styles';
-import {LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, Legend} from 'recharts';
+import {LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, Legend, CartesianGrid} from 'recharts';
 import Typography from "@mui/material/Typography";
 import {useState} from "react";
 import {Checkbox, createTheme, FormControlLabel, Grid, Paper, Switch} from "@mui/material";
@@ -94,13 +94,16 @@ export default function ShortChart(props) {
 
     }, [data])
     const CustomTooltip = ({active, payload, label}) => {
+
         if (active && payload && payload.length) {
+            const debtIndex = 2 - (displayProfit ? 0 : 1)
+            const positIndex = 3 - (displayProfit ? 0 : 1) - (displayDebt ? 0 : 1)
             return (
                 <div className="custom-tooltip">
                     <p className="label">{`Borrowed Asset Value : ${label}%`}</p>
                     {displayProfit && <p className="label">{`Profit: $${payload[1].value}`}</p>}
-                    {displayDebt && <p className="label">{`Debt Value: $${payload[2].value}`}</p>}
-                    {displayPosit && <p className="label">{`Position Value: $${payload[3].value}`}</p>}
+                    {displayDebt && <p className="label">{`Debt Value: $${payload[debtIndex].value}`}</p>}
+                    {displayPosit && <p className="label">{`Position Value: $${payload[positIndex].value}`}</p>}
                 </div>
             );
         }
@@ -110,6 +113,7 @@ export default function ShortChart(props) {
     const [displayDebt, setDisplayDebt] = React.useState(true)
     const [displayPosit, setDisplayPosit] = React.useState(true)
     const [displayProfit, setDisplayProfit] = React.useState(true)
+    const [displayGrid, setDisplayGrid] = React.useState(true)
 
     const handleDisplayDebtline = () => {
         setDisplayDebt(!displayDebt)
@@ -121,6 +125,10 @@ export default function ShortChart(props) {
 
     const handleDisplayProfitline = () => {
         setDisplayProfit(!displayProfit)
+
+    }
+    const handleDisplayGrid = () => {
+        setDisplayGrid(!displayGrid)
 
     }
 
@@ -189,6 +197,9 @@ export default function ShortChart(props) {
                             <Line data={data} type="monotone" name={'Position Value'} dataKey="positVal"
                                   stroke={theme.palette.primary.dark} dot={false}/>
                             }
+                            {displayGrid &&
+                            <CartesianGrid/>
+                            }
 
                             <Tooltip contentStyle={{backgroundColor: 'grey', border: '1px solid black'}}
                                      content={CustomTooltip}/>
@@ -214,6 +225,10 @@ export default function ShortChart(props) {
                         <Grid item xs={3}>
                             <FormControlLabel control=<Switch onChange={handleDisplayProfitline} disableRipple
                                               defaultChecked size="small"/>label="Profit"/>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <FormControlLabel control=<Switch onChange={handleDisplayGrid} disableRipple
+                                              defaultChecked size="small"/>label="Grid Lines"/>
                         </Grid>
                     </Grid>
 
