@@ -38,7 +38,7 @@ function ShortAsset() {
     });
 
     const handleAssetPriceChange = (event) => {
-        setData({...data, valueSupplied: event.target.value});
+        setData({...data, assetprice: event.target.value});
     }
     const handleLeverageChange = (event) => {
         setData({...data, multi: event.target.value});

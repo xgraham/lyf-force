@@ -56,6 +56,9 @@ HtmlTooltip.propTypes = {
     title: PropTypes.element,
     children: PropTypes.node
 };
+
+
+
 export default function Chart(props) {
     const theme = createTheme({
         palette: {
@@ -75,7 +78,6 @@ export default function Chart(props) {
             time: props.data.time,
             liquidation: props.data.liquidationthreshold
         }
-
 
         const newDataSet = []
         for (let i = -100; i < 101; i++) {
@@ -105,6 +107,22 @@ export default function Chart(props) {
 
     }, [data])
 
+    const CustomTooltip = ({active, payload, label}) => {
+
+        if (active && payload && payload.length) {
+            const debtIndex = 0
+            const positIndex = 1
+            return (
+                <div className="custom-tooltip">
+                    <p className="label">{`Borrowed Asset Value Change: ${label}%`}</p>
+                    <p className="label">{`HODL Profit: $${payload[0].value}`}</p>
+                    <p className="label">{`Farm Profit: $${payload[1].value}`}</p>
+                </div>
+            );
+        }
+
+        return null;
+    };
 
     return (
         <React.Fragment>
@@ -157,7 +175,7 @@ export default function Chart(props) {
                           stroke={theme.palette.secondary.main} dot={false}/>
                     <Line data={data} type="monotone" name={'FARM PROFIT'} dataKey="farm_profit"
                           stroke={theme.palette.primary.main} dot={false}/>
-                    <Tooltip  contentStyle={{backgroundColor: 'grey', border: '1px solid black'}}/>
+                    <Tooltip   content={CustomTooltip} contentStyle={{backgroundColor: 'grey', border: '1px solid black'}}/>
                 </LineChart>
             </ResponsiveContainer>
         </React.Fragment>
