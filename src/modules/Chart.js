@@ -2,39 +2,36 @@ import * as React from 'react';
 import {useTheme} from '@mui/material/styles';
 import {LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip} from 'recharts';
 import Typography from "@mui/material/Typography";
-import {CartesianGrid} from "recharts";
 import {useState} from "react";
 import styled from "@emotion/styled";
-import {Button, tooltipClasses} from "@mui/material";
+import {createTheme, tooltipClasses} from "@mui/material";
 import * as PropTypes from "prop-types";
 
 const E = 2.71828182845904
 
-function createData(deltapct, gain) {
-    return {deltapct: deltapct, gain: gain}
+
+function getLPValue(priceChange) {
+    const value = (1 + (parseFloat(priceChange) / 100))
+    return Math.pow(value, .5)
 }
 
-function getLPValue(priceChange){
-    const value = (1+(parseFloat(priceChange)/100))
-    return Math.pow(value,.5)
-}
-function getPositionValue(assetprice,multi, LPValue, apr, time ){
+function getPositionValue(assetprice, multi, LPValue, apr, time) {
     const step1 = assetprice * multi * LPValue;
     const avg1 = assetprice * multi * LPValue;
     const avg2 = assetprice * multi
-    const avg = (avg1+avg2)/2
-    const step3 = ((apr/100)*time/365)
-    const exp = Math.pow(E, step3)-1
+    const avg = (avg1 + avg2) / 2
+    const step3 = ((apr / 100) * time / 365)
+    const exp = Math.pow(E, step3) - 1
     const step5 = avg * exp
     return step1 + step5
 }
 
-function getDebtValue(assetprice, multi, borrowapr, time ){
+function getDebtValue(assetprice, multi, borrowapr, time) {
     const leverage = multi - 1
     const borrowValue = leverage * assetprice
-    const step3 = ((borrowapr/100) * (parseInt(time)/365))
+    const step3 = ((borrowapr / 100) * (parseInt(time) / 365))
 
-    const exp = Math.pow(E,step3 )
+    const exp = Math.pow(E, step3)
     return borrowValue * exp
 }
 
@@ -43,7 +40,7 @@ function getChange(price, delta) {
 }
 
 
-const HtmlTooltip= styled(({className, ...props}) => (
+const HtmlTooltip = styled(({className, ...props}) => (
     <Tooltip {...props} classes={{popper: className}}/>
 ))(({theme}) => ({
     [`& .${tooltipClasses.tooltip}`]: {
@@ -60,7 +57,11 @@ HtmlTooltip.propTypes = {
     children: PropTypes.node
 };
 export default function Chart(props) {
-    const theme = useTheme();
+    const theme = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
     // assetprice:0,multi:1,borrowapr:0,apy:0, time:1
     const [data, setData] = useState({});
 
@@ -79,17 +80,21 @@ export default function Chart(props) {
         const newDataSet = []
         for (let i = -100; i < 101; i++) {
             const newPrice = getChange(inputData.assetprice, i)
-            const profit = parseFloat(newPrice-inputData.assetprice)
+            const profit = parseFloat(newPrice - inputData.assetprice)
             const lpval = getLPValue(i)
-            const posit = getPositionValue(inputData.assetprice,inputData.multi, lpval, inputData.apr, inputData.time )
-            const debt = getDebtValue(inputData.assetprice, inputData.multi,inputData.borrowapr,inputData.time)
+            const posit = getPositionValue(inputData.assetprice, inputData.multi, lpval, inputData.apr, inputData.time)
+            const debt = getDebtValue(inputData.assetprice, inputData.multi, inputData.borrowapr, inputData.time)
             const debtRatio = debt / posit
             const equity = posit - debt
             let farm_profit = equity - inputData.assetprice
-            if (debtRatio>(parseFloat(parseInt(inputData.liquidation)/100))){
+            if (debtRatio > (parseFloat(parseInt(inputData.liquidation) / 100))) {
                 farm_profit = (inputData.assetprice * .1) - inputData.assetprice
             }
-            newDataSet.push({deltapct: i, profit: Math.round((profit + Number.EPSILON) * 100) / 100,farm_profit: Math.round((farm_profit + Number.EPSILON) * 100) / 100 })
+            newDataSet.push({
+                deltapct: i,
+                profit: Math.round((profit + Number.EPSILON) * 100) / 100,
+                farm_profit: Math.round((farm_profit + Number.EPSILON) * 100) / 100
+            })
             if (i === 100) {
                 setData(newDataSet)
             }
@@ -124,11 +129,11 @@ export default function Chart(props) {
                         style={theme.typography.body2}
                         allowDuplicatedCategory={false}
                         type="number"
-                        >
+                    >
                         <Label
                             value="% Change in Supplied Asset Value"
                             position="top"
-                            offset={15} >      </Label>
+                            offset={15}> </Label>
                     </XAxis>
 
                     <YAxis
@@ -140,7 +145,7 @@ export default function Chart(props) {
                             position="left"
                             style={{
                                 textAnchor: 'middle',
-                                fill: theme.palette.text.primary,
+                                fill: 'white',
                                 ...theme.typography.body1,
                             }}
                         >
@@ -148,9 +153,11 @@ export default function Chart(props) {
                         </Label>
                     </YAxis>
 
-                    <Line data={data} type="monotone" name={'HODL PROFIT'} dataKey="profit" stroke={theme.palette.secondary.main} dot={false}/>
-                    <Line data={data} type="monotone" name={'FARM PROFIT'} dataKey="farm_profit" stroke={theme.palette.primary.main} dot={false}/>
-                    <Tooltip/>
+                    <Line data={data} type="monotone" name={'HODL PROFIT'} dataKey="profit"
+                          stroke={theme.palette.secondary.main} dot={false}/>
+                    <Line data={data} type="monotone" name={'FARM PROFIT'} dataKey="farm_profit"
+                          stroke={theme.palette.primary.main} dot={false}/>
+                    <Tooltip  contentStyle={{backgroundColor: 'grey', border: '1px solid black'}}/>
                 </LineChart>
             </ResponsiveContainer>
         </React.Fragment>

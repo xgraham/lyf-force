@@ -5,13 +5,13 @@ import Typography from "@mui/material/Typography";
 
 
 const drawerWidth = 240;
+
 function Header() {
     return (
         <header>
-
             <AppBar
                 position="fixed"
-                sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+                sx={{width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px`}}
             >
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div">

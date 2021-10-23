@@ -6,26 +6,27 @@ import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
-import Chart from "../modules/Chart";
 import {
-    Card,
-    CardContent,
     Container,
     Grid,
     InputAdornment,
     Paper,
     Slider,
     TextField,
-    Tooltip,
-    tooltipClasses
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {useState} from "react";
-import styled from "@emotion/styled";
 import ShortChart from "../modules/ShortChart";
+import {withStyles} from "@mui/styles";
 
 const drawerWidth = 240;
-
+const CssTextField = withStyles({
+    root: {
+        '& .MuiInputBase-root': {
+            color: 'white',
+        },
+    },
+})(TextField);
 function ShortAsset() {
     const [data, setData] = useState({
         assetprice: 100,
@@ -58,10 +59,8 @@ function ShortAsset() {
     }
 
 
-
     return (
         <Box>
-            <CssBaseline/>
             <Drawer
                 sx={{
                     width: drawerWidth,
@@ -87,7 +86,7 @@ function ShortAsset() {
                         <Typography>Value of Assets Supplied</Typography>
                     </ListItem>
                     <ListItem>
-                        <TextField
+                        <CssTextField
                             id="assetprice"
                             type="number"
                             InputLabelProps={{
@@ -122,7 +121,7 @@ function ShortAsset() {
                         </Typography>
                     </ListItem>
                     <ListItem>
-                        <TextField
+                        <CssTextField
                             id="borrowapr"
                             type="number"
                             InputLabelProps={{
@@ -141,7 +140,7 @@ function ShortAsset() {
                         </Typography>
                     </ListItem>
                     <ListItem>
-                        <TextField
+                        <CssTextField
                             id="apy"
                             type="number"
                             InputLabelProps={{
@@ -160,7 +159,7 @@ function ShortAsset() {
                         </Typography>
                     </ListItem>
                     <ListItem>
-                        <TextField
+                        <CssTextField
                             id="debtratio"
                             type="number"
                             InputLabelProps={{
@@ -181,7 +180,7 @@ function ShortAsset() {
                 component="main"
                 sx={{
                     backgroundColor: (theme) =>
-                        theme.palette.mode === 'light'
+                        theme.palette.mode === 'dark'
                             ? theme.palette.grey[100]
                             : theme.palette.grey[900],
                     flexGrow: 1,
@@ -189,7 +188,6 @@ function ShortAsset() {
                     overflow: 'auto',
                 }}
             >
-                <Toolbar/>
                 <Container maxWidth="md" sx={{mt: 4, mb: 4, ml: 4, mr: 4, overflow: 'auto'}}>
                     <Grid container spacing={3}>
                         {/* Chart */}
@@ -215,17 +213,23 @@ function ShortAsset() {
                             </Paper>
                         </Grid>
                         <Grid item xs={12}>
-                                <Paper sx={{ minWidth: 275,p: 2, display: 'flex', flexDirection: 'column' }} elevation={2}>
-                                        <Typography sx={{ fontSize: 18 }} color="text.secondary" gutterBottom>
-                                            Shorting an asset through leveraged yield farms
-                                        </Typography>
-                                    <Typography variant="body2">
-                                        By supplying a stable coin and borrowing an asset, you can effectively short it to an extent.
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        When the borrowed asset drops in price, the amount of debt to be repaid also drops. This allows for a bearish position to be taken while also receiving yield rewards.
-                                    </Typography>
-                                </Paper>
+                            <Paper sx={{minWidth: 275, p: 2, display: 'flex', flexDirection: 'column'}} elevation={2}>
+                                <Typography sx={{fontSize: 18,}} color="text.primary" gutterBottom>
+                                    Shorting an asset through leveraged yield farms
+                                </Typography>
+                                <Typography variant="body2">
+                                    By supplying a stable coin and borrowing an asset, you can effectively short it to
+                                    an extent.
+                                </Typography>
+                                <Typography variant="body2">
+                                    When the borrowed asset drops in price, the amount of debt to be repaid also drops.
+                                    This allows for a bearish position to be taken while also receiving yield rewards.
+                                </Typography>
+                                <Typography variant="body2">
+                                    You cannot be effectively short an asset below 2x leverage because at below 2x, a
+                                    portion of your supplied assets will be on each side of the liquidity pair.
+                                </Typography>
+                            </Paper>
                         </Grid>
                     </Grid>
 

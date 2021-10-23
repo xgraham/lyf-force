@@ -4,12 +4,11 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import CssBaseline from "@mui/material/CssBaseline";
 import StablePair from "./StablePair";
 import ShortAsset from "./ShortAsset";
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <div
@@ -20,7 +19,7 @@ function TabPanel(props) {
             {...other}
         >
             {value === index && (
-                <Box sx={{ p: 3 }}>
+                <Box sx={{p: 3}}>
                     <Typography>{children}</Typography>
                 </Box>
             )}
@@ -50,9 +49,8 @@ export default function BasicTabs() {
 
     const drawerWidth = 240;
     return (
-
-        <Box sx={{ width: '100%', marginTop:'65px',ml: `${drawerWidth}px`  }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{width: '100%', marginTop: '65px', ml: `${drawerWidth}px`}}>
+            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="Leveraged Long Asset" {...a11yProps(0)} />
                     <Tab label="Leveraged Short Asset" {...a11yProps(1)} />
@@ -60,7 +58,7 @@ export default function BasicTabs() {
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                   <StablePair />
+                <StablePair/>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <ShortAsset/>

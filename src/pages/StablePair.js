@@ -7,14 +7,36 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import Chart from "../modules/Chart";
-import {Container, Grid, InputAdornment, Paper, Slider, TextField, Tooltip, tooltipClasses} from "@mui/material";
+import {withStyles} from "@mui/styles";
+import {
+    Container,
+    createTheme,
+    Grid,
+    InputAdornment,
+    Paper,
+    Slider,
+    TextField,
+    Tooltip,
+    tooltipClasses
+} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {useState} from "react";
-import styled from "@emotion/styled";
 
 const drawerWidth = 240;
 
+const CssTextField = withStyles({
+    root: {
+        '& .MuiInputBase-root': {
+            color: 'white',
+        },
+    },
+})(TextField);
 function StablePair() {
+    const theme = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
     const [data, setData] = useState({
         assetprice: 100,
         multi: 1,
@@ -46,10 +68,8 @@ function StablePair() {
     }
 
 
-
     return (
         <Box>
-            <CssBaseline/>
             <Drawer
                 sx={{
                     width: drawerWidth,
@@ -75,7 +95,7 @@ function StablePair() {
                         <Typography>Value of Assets Supplied</Typography>
                     </ListItem>
                     <ListItem>
-                        <TextField
+                        <CssTextField
                             id="assetprice"
                             type="number"
                             InputLabelProps={{
@@ -110,7 +130,7 @@ function StablePair() {
                         </Typography>
                     </ListItem>
                     <ListItem>
-                        <TextField
+                        <CssTextField
                             id="borrowapr"
                             type="number"
                             InputLabelProps={{
@@ -129,7 +149,7 @@ function StablePair() {
                         </Typography>
                     </ListItem>
                     <ListItem>
-                        <TextField
+                        <CssTextField
                             id="apy"
                             type="number"
                             InputLabelProps={{
@@ -148,7 +168,7 @@ function StablePair() {
                         </Typography>
                     </ListItem>
                     <ListItem>
-                        <TextField
+                        <CssTextField
                             id="debtratio"
                             type="number"
                             InputLabelProps={{
@@ -169,7 +189,7 @@ function StablePair() {
                 component="main"
                 sx={{
                     backgroundColor: (theme) =>
-                        theme.palette.mode === 'light'
+                        theme.palette.mode === 'dark'
                             ? theme.palette.grey[100]
                             : theme.palette.grey[900],
                     flexGrow: 1,
@@ -177,7 +197,6 @@ function StablePair() {
                     overflow: 'auto',
                 }}
             >
-                <Toolbar/>
                 <Container maxWidth="md" sx={{mt: 4, mb: 4, ml: 4, mr: 4, overflow: 'auto'}}>
                     <Grid container spacing={3}>
                         {/* Chart */}
@@ -203,8 +222,21 @@ function StablePair() {
                             </Paper>
                         </Grid>
                         <Grid item xs={12}>
-                            <Paper sx={{p: 2, display: 'flex', flexDirection: 'column'}}>
-
+                            <Paper sx={{minWidth: 275, p: 2, display: 'flex', flexDirection: 'column'}} elevation={2}>
+                                <Typography sx={{fontSize: 18,}} color="text.primary" gutterBottom>
+                                    Stablecoin Leveraged Yield Farming
+                                </Typography>
+                                <Typography variant="body2">
+                                    By borrowing against your supplied asset, you take a bullish long position that you
+                                    will require less of the asset to pay off your debt in the long run.
+                                </Typography>
+                                <Typography variant="body2">
+                                    At less than 2x, your position holds value better against small dips.
+                                </Typography>
+                                <Typography variant="body2">
+                                    At greater than ~2.4x, your total value appreciates in value quicker than the
+                                    underlying asset.
+                                </Typography>
                             </Paper>
                         </Grid>
                     </Grid>
