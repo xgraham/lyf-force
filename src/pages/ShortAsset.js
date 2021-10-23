@@ -30,7 +30,7 @@ const CssTextField = withStyles({
 function ShortAsset() {
     const [data, setData] = useState({
         assetprice: 100,
-        multi: 1,
+        multi: 2,
         borrowapr: 0,
         apy: 0,
         time: 1,

@@ -97,10 +97,10 @@ export default function ShortChart(props) {
         if (active && payload && payload.length) {
             return (
                 <div className="custom-tooltip">
-                    <p className="label">{`Borrowed Asset Value : ${label} %`}</p>
-                    {displayProfit && <p className="label">{`Profit $${payload[1].value}`}</p>}
-                    {displayDebt && <p className="label">{`Debt Value $${payload[2].value}`}</p>}
-                    {displayPosit && <p className="label">{`Position Value $${payload[3].value}`}</p>}
+                    <p className="label">{`Borrowed Asset Value : ${label}%`}</p>
+                    {displayProfit && <p className="label">{`Profit: $${payload[1].value}`}</p>}
+                    {displayDebt && <p className="label">{`Debt Value: $${payload[2].value}`}</p>}
+                    {displayPosit && <p className="label">{`Position Value: $${payload[3].value}`}</p>}
                 </div>
             );
         }
