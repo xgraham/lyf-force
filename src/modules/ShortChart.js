@@ -72,17 +72,19 @@ export default function ShortChart(props) {
             const debt = getDebtValue(inputData.valueSupplied, inputData.multi, inputData.borrowapr, inputData.time, i)
             const debtRatio = debt / posit
             const equity = posit - debt
-            const profit = parseFloat(equity - inputData.valueSupplied)
             let farm_profit = equity - inputData.valueSupplied
+            let liquidated = false
             if (debtRatio > (parseFloat(parseInt(inputData.liquidation) / 100))) {
                 farm_profit = (inputData.valueSupplied * .1) - inputData.valueSupplied
+                liquidated = true
             }
             newDataSet.push({
                 deltapct: i,
                 profit: 0,
                 farm_profit: Math.round((farm_profit + Number.EPSILON) * 100) / 100,
                 debt: Math.round((debt + Number.EPSILON) * 100) / 100,
-                positVal: Math.round((posit + Number.EPSILON) * 100) / 100
+                positVal: Math.round((posit + Number.EPSILON) * 100) / 100,
+                liquidated: liquidated
             })
             if (i === 100) {
                 setData(newDataSet)
@@ -96,14 +98,16 @@ export default function ShortChart(props) {
     const CustomTooltip = ({active, payload, label}) => {
 
         if (active && payload && payload.length) {
-            const debtIndex = 2 - (displayProfit ? 0 : 1)
-            const positIndex = 3 - (displayProfit ? 0 : 1) - (displayDebt ? 0 : 1)
+            const debtIndex = 2
+            const positIndex = 3
+            const liquidated = (payload[debtIndex].value / payload[positIndex].value) > .85
             return (
                 <div className="custom-tooltip">
-                    <p className="label">{`Borrowed Asset Value : ${label}%`}</p>
+                    <p className="label">{`Borrowed Asset Value Change: ${label}%`}</p>
                     {displayProfit && <p className="label">{`Profit: $${payload[1].value}`}</p>}
                     {displayDebt && <p className="label">{`Debt Value: $${payload[debtIndex].value}`}</p>}
                     {displayPosit && <p className="label">{`Position Value: $${payload[positIndex].value}`}</p>}
+                    {liquidated && <p>At this value, your position will be liquidated.</p>}
                 </div>
             );
         }
@@ -184,19 +188,14 @@ export default function ShortChart(props) {
                                   stroke={"black"}
                                   dot={false}/>
 
-                            {displayProfit &&
-                            <Line data={data} type="monotone" name={'Profit'} dataKey="farm_profit"
+                            <Line data={data} type="monotone" name={'Profit'}strokeWidth={(displayProfit? 1 : 0)} dataKey="farm_profit"
                                   stroke={"Green"}
                                   dot={false}/>
-                            }
-                            {displayDebt &&
-                            <Line data={data} type="monotone" name={'Debt'} dataKey="debt" stroke={"red"}
+
+                            <Line data={data} type="monotone" name={'Debt'} dataKey="debt" strokeWidth={(displayDebt? 1 : 0)}stroke={"red"}
                                   dot={false}/>
-                            }
-                            {displayPosit &&
-                            <Line data={data} type="monotone" name={'Position Value'} dataKey="positVal"
+                            <Line data={data} type="monotone" name={'Position Value'}  strokeWidth={(displayPosit? 1 : 0)} dataKey="positVal"
                                   stroke={theme.palette.primary.dark} dot={false}/>
-                            }
                             {displayGrid &&
                             <CartesianGrid/>
                             }

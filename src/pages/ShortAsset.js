@@ -226,7 +226,7 @@ function ShortAsset() {
                                     This allows for a bearish position to be taken while also receiving yield rewards.
                                 </Typography>
                                 <Typography variant="body2">
-                                    You cannot be effectively short an asset below 2x leverage because at below 2x, a
+                                    You cannot be effectively short an asset below 2x leverage. While below 2x, a
                                     portion of your supplied assets will be on each side of the liquidity pair.
                                 </Typography>
                             </Paper>
