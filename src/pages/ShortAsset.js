@@ -215,10 +215,10 @@ function ShortAsset() {
                         <Grid item xs={12}>
                             <Paper sx={{minWidth: 275, p: 2, display: 'flex', flexDirection: 'column'}} elevation={2}>
                                 <Typography sx={{fontSize: 18,}} color="text.primary" gutterBottom>
-                                    Shorting an asset through leveraged yield farms
+                                    Shorting a token through leveraged yield farms
                                 </Typography>
                                 <Typography variant="body2">
-                                    By supplying a stable coin and borrowing an asset, you can effectively short it to
+                                    By supplying a stable coin and borrowing a token, you can effectively short it to
                                     an extent.
                                 </Typography>
                                 <Typography variant="body2">

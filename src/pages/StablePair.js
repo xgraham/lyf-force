@@ -224,7 +224,7 @@ function StablePair() {
                         <Grid item xs={12}>
                             <Paper sx={{minWidth: 275, p: 2, display: 'flex', flexDirection: 'column'}} elevation={2}>
                                 <Typography sx={{fontSize: 18,}} color="text.primary" gutterBottom>
-                                    Stablecoin Leveraged Yield Farming
+                                    Borrowed-Stablecoin Leveraged Yield Farming
                                 </Typography>
                                 <Typography variant="body2">
                                     By borrowing against your supplied asset, you take a bullish long position that you

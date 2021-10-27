@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {useTheme} from '@mui/material/styles';
 import {LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip} from 'recharts';
 import Typography from "@mui/material/Typography";
 import {useState} from "react";
@@ -110,8 +109,6 @@ export default function Chart(props) {
     const CustomTooltip = ({active, payload, label}) => {
 
         if (active && payload && payload.length) {
-            const debtIndex = 0
-            const positIndex = 1
             return (
                 <div className="custom-tooltip">
                     <p className="label">{`Borrowed Asset Value Change: ${label}%`}</p>
