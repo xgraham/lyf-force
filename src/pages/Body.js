@@ -52,8 +52,8 @@ export default function BasicTabs() {
         <Box sx={{width: '100%', marginTop: '65px', ml: `${drawerWidth}px`}}>
             <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="Borrow First Token" {...a11yProps(0)} />
-                    <Tab label="Borrow Second Token" {...a11yProps(1)} />
+                    <Tab label="Borrow Second Token" {...a11yProps(0)} />
+                    <Tab label="Borrow First Token" {...a11yProps(1)} />
                     {/*<Tab label="Item Three" {...a11yProps(2)} />*/}
                 </Tabs>
             </Box>

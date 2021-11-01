@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -16,8 +15,6 @@ import {
     Paper,
     Slider,
     TextField,
-    Tooltip,
-    tooltipClasses
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {useState} from "react";
@@ -31,6 +28,7 @@ const CssTextField = withStyles({
         },
     },
 })(TextField);
+
 function StablePair() {
     const theme = createTheme({
         palette: {
@@ -43,7 +41,9 @@ function StablePair() {
         borrowapr: 0,
         apy: 0,
         time: 1,
-        liquidationthreshold: 85
+        liquidationthreshold: 85,
+        minchange:-100,
+        maxchange:100
     });
 
     const handleAssetPriceChange = (event) => {
@@ -51,6 +51,28 @@ function StablePair() {
     }
     const handleLeverageChange = (event) => {
         setData({...data, multi: event.target.value});
+
+    }
+    const handleMaxPctChange = (event) => {
+        let newValue = event.target.value;
+        if (newValue <= parseInt(data.minchange)){
+            event.target.value = parseInt(data.minchange) + 1
+        }
+        if(newValue<100){
+            event.target.value = 100
+        }
+        setData({...data, maxchange: event.target.value});
+
+    }
+    const handleMinPctChange = (event) => {
+        let newValue = event.target.value;
+        if (newValue >= data.maxchange){
+            event.target.value = data.maxchange - 1
+        }
+        if(newValue<-100){
+            event.target.value = -100
+        }
+        setData({...data, minchange: event.target.value});
 
     }
 
@@ -109,7 +131,7 @@ function StablePair() {
                     <ListItem size={'medium'}>
                         <Typography>Leverage Multiplier</Typography>
                     </ListItem>
-                    <Box class='tall'>
+                    <Box className='tall'>
                         <ListItem>
                             <Slider
                                 id={'slider'}
@@ -181,6 +203,7 @@ function StablePair() {
                             onChange={handleDebtRatioChange}
                         />
                     </ListItem>
+
                 </List>
                 <Divider/>
 
@@ -200,8 +223,7 @@ function StablePair() {
                 <Container maxWidth="md" sx={{mt: 4, mb: 4, ml: 4, mr: 4, overflow: 'auto'}}>
                     <Grid container spacing={3}>
                         {/* Chart */}
-                        <Grid item xs={12
-                        }>
+                        <Grid item xs={12 }>
                             <Paper
                                 sx={{
                                     p: 2,
@@ -221,7 +243,7 @@ function StablePair() {
                                         max={365} onChange={handleLengthChange}/>
                             </Paper>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={6}>
                             <Paper sx={{minWidth: 275, p: 2, display: 'flex', flexDirection: 'column'}} elevation={2}>
                                 <Typography sx={{fontSize: 18,}} color="text.primary" gutterBottom>
                                     Borrowed-Stablecoin Leveraged Yield Farming
@@ -239,12 +261,57 @@ function StablePair() {
                                 </Typography>
                             </Paper>
                         </Grid>
+                        <Grid item xs={6}>
+                            <Paper sx={{minWidth: 275, p: 2, display: 'flex', flexDirection: 'column'}}>
+                                <Grid container>
+                                    <Grid item xs={6}>
+                                        <Typography>
+                                            X-Axis Min
+                                        </Typography>
+                                        <CssTextField
+
+                                            id="minchange"
+                                            type="number"
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }} InputProps={{
+                                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                        }}
+                                            variant="standard"
+                                            defaultValue={-100}
+                                            onChange={handleMinPctChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Typography>
+                                            X-Axis Max
+                                        </Typography>
+                                        <CssTextField
+
+                                            id="maxchange"
+                                            type="number"
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }} InputProps={{
+                                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                        }}
+                                            variant="standard"
+                                            defaultValue={100}
+                                            onChange={handleMaxPctChange}
+                                        />
+                                    </Grid>
+
+                                </Grid>
+
+                            </Paper>
+                        </Grid>
                     </Grid>
 
                 </Container>
             </Box>
         </Box>
-    );
+    )
+        ;
 }
 
 export default StablePair;

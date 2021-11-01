@@ -60,12 +60,16 @@ export default function ShortChart(props) {
             borrowapr: props.data.borrowapr,
             apr: props.data.apy,
             time: props.data.time,
-            liquidation: props.data.liquidationthreshold
+            liquidation: props.data.liquidationthreshold,
+            xmin: props.data.minchange,
+            xmax: props.data.maxchange
         }
 
 
         const newDataSet = []
-        for (let i = -100; i < 101; i++) {
+        const minx = parseInt(inputData.xmin)
+        const maxx = parseInt(inputData.xmax)
+        for (let i = minx; i <= maxx; i++) {
             const newPrice = getChange(inputData.valueSupplied, i)
             const lpval = getLPValue(i)
             const posit = getPositionValue(inputData.valueSupplied, inputData.multi, lpval, inputData.apr, inputData.time)
@@ -160,6 +164,7 @@ export default function ShortChart(props) {
                                 style={theme.typography.body2}
                                 allowDuplicatedCategory={false}
                                 type="number"
+                                domain={[props.data.minchange, props.data.maxchange]}
                             >
                                 <Label
                                     value="% Change in Borrowed Asset Value"

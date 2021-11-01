@@ -34,7 +34,9 @@ function ShortAsset() {
         borrowapr: 0,
         apy: 0,
         time: 1,
-        liquidationthreshold: 85
+        liquidationthreshold: 85,
+        minchange:-100,
+        maxchange:100
     });
 
     const handleAssetPriceChange = (event) => {
@@ -57,7 +59,28 @@ function ShortAsset() {
     const handleDebtRatioChange = (event) => {
         setData({...data, liquidationthreshold: event.target.value})
     }
+    const handleMaxPctChange = (event) => {
+        let newValue = parseInt(event.target.value);
+        if (newValue <= parseInt(data.minchange)){
+            event.target.value = parseInt(data.minchange) + 1
+        }
+        if(newValue<100){
+            event.target.value = 100
+        }
+        setData({...data, maxchange: event.target.value});
 
+    }
+    const handleMinPctChange = (event) => {
+        let newValue = parseInt(event.target.value);
+        if (newValue >= parseInt(data.maxchange)){
+            event.target.value = data.maxchange - 1
+        }
+        if(newValue<-100){
+            event.target.value = -100
+        }
+        setData({...data, minchange: event.target.value});
+
+    }
 
     return (
         <Box>
@@ -212,7 +235,7 @@ function ShortAsset() {
                                         max={365} onChange={handleLengthChange}/>
                             </Paper>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={6}>
                             <Paper sx={{minWidth: 275, p: 2, display: 'flex', flexDirection: 'column'}} elevation={2}>
                                 <Typography sx={{fontSize: 18,}} color="text.primary" gutterBottom>
                                     Shorting a token through leveraged yield farms
@@ -229,6 +252,50 @@ function ShortAsset() {
                                     You cannot be effectively short an asset below 2x leverage. While below 2x, a
                                     portion of your supplied assets will be on each side of the liquidity pair.
                                 </Typography>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Paper sx={{minWidth: 275, p: 2, display: 'flex', flexDirection: 'column'}}>
+                                <Grid container>
+                                    <Grid item xs={6}>
+                                        <Typography>
+                                            X-Axis Min
+                                        </Typography>
+                                        <CssTextField
+
+                                            id="minchange"
+                                            type="number"
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }} InputProps={{
+                                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                        }}
+                                            variant="standard"
+                                            defaultValue={-100}
+                                            onChange={handleMinPctChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Typography>
+                                            X-Axis Max
+                                        </Typography>
+                                        <CssTextField
+
+                                            id="maxchange"
+                                            type="number"
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }} InputProps={{
+                                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                        }}
+                                            variant="standard"
+                                            defaultValue={100}
+                                            onChange={handleMaxPctChange}
+                                        />
+                                    </Grid>
+
+                                </Grid>
+
                             </Paper>
                         </Grid>
                     </Grid>

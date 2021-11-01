@@ -75,11 +75,15 @@ export default function Chart(props) {
             borrowapr: props.data.borrowapr,
             apr: props.data.apy,
             time: props.data.time,
-            liquidation: props.data.liquidationthreshold
+            liquidation: props.data.liquidationthreshold,
+            xmin: props.data.minchange,
+            xmax: props.data.maxchange
         }
 
         const newDataSet = []
-        for (let i = -100; i < 101; i++) {
+        const minx = parseInt(inputData.xmin)
+        const maxx = parseInt(inputData.xmax)
+        for (let i =minx ; i < maxx +1; i++) {
             const newPrice = getChange(inputData.assetprice, i)
             const profit = parseFloat(newPrice - inputData.assetprice)
             const lpval = getLPValue(i)
@@ -111,7 +115,7 @@ export default function Chart(props) {
         if (active && payload && payload.length) {
             return (
                 <div className="custom-tooltip">
-                    <p className="label">{`Borrowed Asset Value Change: ${label}%`}</p>
+                    <p className="label">{`Token Value Change: ${label}%`}</p>
                     <p className="label">{`HODL Profit: $${payload[0].value}`}</p>
                     <p className="label">{`Farm Profit: $${payload[1].value}`}</p>
                 </div>
@@ -144,6 +148,7 @@ export default function Chart(props) {
                         style={theme.typography.body2}
                         allowDuplicatedCategory={false}
                         type="number"
+                        domain={[props.data.minchange, props.data.maxchange]}
                     >
                         <Label
                             value="% Change in Supplied Asset Value"
